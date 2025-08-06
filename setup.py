@@ -7,16 +7,16 @@ setup(
     install_requires=[
         'flet',
     ],
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Heckerdev",
+    author_email="simplelogin-newsletter.unwilling149@simplelogin.com",
     description="A package for creating animated toast notifications in Flet applications.",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/toast_animation",
+    url="https://github.com/louisdev12/flet_toasty.git",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.0',
 )
