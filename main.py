@@ -1,270 +1,145 @@
 import flet as ft
-from threading import Timer
 from toast_animation import ModernToast
 
+
 def main(page: ft.Page):
-    page.title = "Modern Toast Demo"
-    page.theme_mode = ft.ThemeMode.DARK
-
-    def show_basic_toast(e):
-        ModernToast.info(
-            page,
-            message="This is a basic info toast!",
-            duration=4,
-            show_progress=True
-        )
-
-    def show_success_toast(e):
-        ModernToast(
-            page,
-            message="Operation completed successfully!",
-            duration=3,
-            show_dismiss_button=True,
-            pausable=False,
-            show_progress=True,
-            content_spacing=8
-        )
-
-    def show_error_toast(e):
-        ModernToast.error(
-            page,
-            message="An error occurred while processing!",
-            duration=5
-        )
-
-    def show_warning_toast(e):
-        ModernToast.warning(
-            page,
-            message="This is a warning message!",
-            duration=4
-        )
-
-    def show_cascade_toasts(e):
-        ModernToast.success(page, "First toast in cascade!")
-        Timer(0.5, lambda: ModernToast.info(page, "Second toast!")).start()
-        Timer(1.0, lambda: ModernToast.warning(page, "Third toast!")).start()
-        Timer(1.5, lambda: ModernToast.error(page, "Last toast!")).start()
-
-    def show_custom_content_simple(e):
-        custom_content = ft.Row([
-            ft.Icon(ft.Icons.DOWNLOAD, color="white", size=20),
-            ft.Text("Download completed!", color="white", size=14, weight=ft.FontWeight.W_500),
-            ft.Icon(ft.Icons.CHECK_CIRCLE, color="white", size=16)
-        ], alignment=ft.MainAxisAlignment.START, spacing=8)
-
-        ModernToast(
-            page,
-            custom_content=custom_content,
-            toast_type="success",
-            duration=5,
-            show_progress=True
-        )
-
-    def show_custom_content_advanced(e):
-        custom_content = ft.Column([
+    page.title = "Price Drop Alert Demo"
+    page.padding = 20
+    
+    def show_price_drop_alert(e):
+        def view_product(e):
+            print("Opening product page...")
+            ModernToast.success(page, "Product page opened!", duration=2)
+        
+        def add_to_cart(e):
+            print("Adding to cart...")
+            ModernToast.success(page, "Added to cart!", duration=2)
+        
+        # Simple price drop content
+        price_drop_content = ft.Column([
             ft.Row([
-                ft.Icon(ft.Icons.UPLOAD_FILE, color="white", size=24),
+                ft.Icon(ft.Icons.TRENDING_DOWN, color="#10B981", size=24),
                 ft.Column([
-                    ft.Text("Uploading file...", color="white", size=14, weight=ft.FontWeight.W_600),
-                    ft.Text("document.pdf (2.3 MB)", color="white", size=12, opacity=0.8)
-                ], spacing=2, expand=True),
-                ft.IconButton(
-                    icon=ft.Icons.CLOSE,
-                    icon_color="white",
-                    icon_size=18,
-                    tooltip="Cancel upload"
-                )
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-            ft.ProgressBar(
-                value=0.7,
-                color="white",
-                bgcolor="rgba(255,255,255,0.3)",
-                height=4
-            )
-        ], spacing=8, tight=True)
-
-        ModernToast(
-            page,
-            custom_content=custom_content,
-            toast_type="info",
-            duration=6,
-            show_progress=False,
-            custom_style={"width": 350, "padding": 16}
-        )
-
-    def show_custom_content_interactive(e):
-        def handle_action(action_type):
-            def handler(e):
-                print(f"Action clicked: {action_type}")
-            return handler
-
-        custom_content = ft.Column([
-            ft.Row([
-                ft.Icon(ft.Icons.NOTIFICATIONS, color="white", size=24),
-                ft.Column([
-                    ft.Text("New message received", color="white", size=14, weight=ft.FontWeight.W_600),
-                    ft.Text("John Doe sent you a message", color="white", size=12, opacity=0.9)
-                ], spacing=2, expand=True)
+                    ft.Text("Price Drop Alert!", 
+                           color="white", 
+                           size=16, 
+                           weight=ft.FontWeight.BOLD),
+                    ft.Text("MacBook Pro M3", 
+                           color="white", 
+                           size=14),
+                    ft.Row([
+                        ft.Text("$2,199", 
+                               color="white", 
+                               size=12, 
+                               opacity=0.6,
+                               style=ft.TextStyle(decoration=ft.TextDecoration.LINE_THROUGH)),
+                        ft.Text("$1,799", 
+                               color="#10B981", 
+                               size=14, 
+                               weight=ft.FontWeight.BOLD),
+                        ft.Container(
+                            content=ft.Text("18% OFF", 
+                                           color="white", 
+                                           size=10,
+                                           weight=ft.FontWeight.BOLD),
+                            bgcolor="#EF4444",
+                            border_radius=4,
+                            padding=ft.padding.symmetric(horizontal=6, vertical=2)
+                        )
+                    ], spacing=8)
+                ], spacing=4, expand=True)
             ], spacing=12),
+            
             ft.Row([
-                ft.TextButton(
-                    "Reply",
+                ft.OutlinedButton(
+                    "View Product",
+                    icon=ft.Icons.VISIBILITY,
                     style=ft.ButtonStyle(
                         color="white",
-                        bgcolor="rgba(255,255,255,0.2)"
+                        side=ft.BorderSide(width=1, color="white")
                     ),
-                    on_click=handle_action("reply")
+                    on_click=view_product
                 ),
-                ft.TextButton(
-                    "Mark as Read",
+                ft.ElevatedButton(
+                    "Add to Cart",
+                    icon=ft.Icons.SHOPPING_CART,
                     style=ft.ButtonStyle(
-                        color="white",
-                        bgcolor="rgba(255,255,255,0.1)"
+                        bgcolor="#10B981",
+                        color="white"
                     ),
-                    on_click=handle_action("mark_read")
-                )
-            ], alignment=ft.MainAxisAlignment.END, spacing=8)
-        ], spacing=10, tight=True)
-
+                    on_click=add_to_cart
+                ),
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            ft.Divider(height=5, color=ft.Colors.TRANSPARENT),
+        ], spacing=16,)
+        
         ModernToast(
             page,
-            custom_content=custom_content,
-            toast_type="info",
-            duration=8,
-            show_progress=True,
-            custom_style={"width": 380, "padding": 16}
-        )
-
-    def show_custom_style_toast(e):
-        custom_style = {
-            "bg_color": "#6366F1",
-            "text_color": "white",
-            "icon_color": "#FDE047",
-            "progress_color": "#FDE047",
-            "progress_height": 4,
-            "width": 400,
-            "padding": 20,
-            "border_radius": 12,
-            "border_width": 2,
-            "border_color": "#8B5CF6",
-            "icon_size": 28,
-            "text_size": 16,
-            "text_weight": ft.FontWeight.BOLD,
-            "shadow_blur": 20,
-            "shadow_spread": 2,
-            "shadow_opacity": 0.4
-        }
-
-        ModernToast(
-            page,
-            message="This is a custom styled toast with enhanced colors and styling!",
-            toast_type="info",
+            custom_content=price_drop_content,
+            toast_type="success",
             duration=6,
-            custom_style=custom_style
+            content_spacing=10,
+            position="top_right",
+            custom_style={
+                "width": 350,
+                "bg_color": "#1F2937",
+                "border_radius": 12,
+                "padding": 20,
+                "shadow_blur": 20,
+                "shadow_opacity": 0.3
+            }
         )
-
-    def show_gradient_style_toast(e):
-        custom_style = {
-            "bg_color": "#EC4899",
-            "text_color": "#FFFFFF",
-            "icon_color": "#FEF3C7",
-            "progress_color": "#FEF3C7",
-            "progress_height": 5,
-            "width": 380,
-            "padding": 18,
-            "border_radius": 15,
-            "border_width": 1,
-            "border_color": "#F472B6",
-            "shadow_blur": 25,
-            "shadow_x": 0,
-            "shadow_y": 8,
-            "shadow_opacity": 0.35
-        }
-
-        ModernToast.success(
-            page,
-            message="Beautiful gradient-style toast with custom progress bar!",
-            duration=5,
-            custom_style=custom_style
-        )
-
-    def show_dark_theme_toast(e):
-        custom_style = {
-            "bg_color": "#1F2937",
-            "text_color": "#F9FAFB",
-            "icon_color": "#10B981",
-            "progress_color": "#10B981",
-            "progress_height": 3,
-            "border_width": 1,
-            "border_color": "#374151",
-            "close_color": "#9CA3AF",
-            "shadow_opacity": 0.5
-        }
-
-        ModernToast.info(
-            page,
-            message="Dark theme toast with visible progress bar",
-            duration=7,
-            custom_style=custom_style
-        )
-
-    def show_minimal_toast(e):
-        custom_style = {
-            "bg_color": "#FFFFFF",
-            "text_color": "#1F2937",
-            "icon_color": "#6366F1",
-            "progress_color": "#6366F1",
-            "progress_height": 2,
-            "border_width": 1,
-            "border_color": "#E5E7EB",
-            "border_radius": 6,
-            "shadow_blur": 10,
-            "shadow_opacity": 0.1
-        }
-
-        ModernToast.warning(
-            page,
-            message="Clean minimal toast design",
-            duration=4,
-            custom_style=custom_style
-        )
-
-    # UI Layout
+    
+    # Simple UI
     page.add(
         ft.Column([
-            ft.Text("Modern Toast Demo", size=28, weight=ft.FontWeight.BOLD),
-            ft.Divider(height=20),
-
-            ft.Text("Basic Toast Types", size=20, weight=ft.FontWeight.W_600),
-            ft.Row([
-                ft.ElevatedButton("Info Toast", on_click=show_basic_toast),
-                ft.ElevatedButton("Success Toast", on_click=show_success_toast),
-                ft.ElevatedButton("Error Toast", on_click=show_error_toast),
-                ft.ElevatedButton("Warning Toast", on_click=show_warning_toast),
-            ], wrap=True, spacing=10),
-
-            ft.Divider(height=20),
-            ft.Text("Cascade Effect", size=20, weight=ft.FontWeight.W_600),
-            ft.ElevatedButton("Show Cascade Toasts", on_click=show_cascade_toasts),
-
-            ft.Divider(height=20),
-            ft.Text("Custom Content Examples", size=20, weight=ft.FontWeight.W_600),
-            ft.Row([
-                ft.ElevatedButton("Simple Custom", on_click=show_custom_content_simple),
-                ft.ElevatedButton("Advanced Custom", on_click=show_custom_content_advanced),
-                ft.ElevatedButton("Interactive Toast", on_click=show_custom_content_interactive),
-            ], wrap=True, spacing=10),
-
-            ft.Divider(height=20),
-            ft.Text("Enhanced Custom Styling (v0.2)", size=20, weight=ft.FontWeight.W_600),
-            ft.Row([
-                ft.ElevatedButton("Custom Colors", on_click=show_custom_style_toast),
-                ft.ElevatedButton("Gradient Style", on_click=show_gradient_style_toast),
-                ft.ElevatedButton("Dark Theme", on_click=show_dark_theme_toast),
-                ft.ElevatedButton("Minimal Style", on_click=show_minimal_toast),
-            ], wrap=True, spacing=10),
-        ], spacing=15, scroll=ft.ScrollMode.AUTO)
+            ft.Text("💰 Price Drop Alert Demo",
+                     size=28, 
+                     weight=ft.FontWeight.BOLD,
+                     text_align=ft.TextAlign.CENTER),
+            ft.Text("Get notified when your favorite products go on sale!",
+                     size=16,
+                     opacity=0.8,
+                     text_align=ft.TextAlign.CENTER),
+            
+            ft.Container(height=40),
+            
+            ft.Container(
+                content=ft.ElevatedButton(
+                    "🔔 Show Price Drop Alert",
+                    icon=ft.Icons.TRENDING_DOWN,
+                    on_click=show_price_drop_alert,
+                    style=ft.ButtonStyle(
+                        bgcolor="#10B981",
+                        color="white",
+                        padding=ft.padding.symmetric(horizontal=30, vertical=15)
+                    ),
+                    height=50
+                ),
+                alignment=ft.alignment.center
+            ),
+            
+            ft.Container(height=30),
+            
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("✨ Features:",
+                             size=16, 
+                             weight=ft.FontWeight.BOLD),
+                    ft.Text("• Interactive buttons in the toast notification"),
+                    ft.Text("• Price comparison with discount percentage"),
+                    ft.Text("• Modern design with smooth animations"),
+                    ft.Text("• Click 'View Product' or 'Add to Cart' in the toast!")
+                ], spacing=8),
+                bgcolor="#2D3748",
+                border_radius=12,
+                padding=20
+            )
+        ], 
+        spacing=20,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     )
+
 
 if __name__ == "__main__":
     ft.app(target=main)
